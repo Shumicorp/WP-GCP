@@ -112,6 +112,14 @@ module "load-balancer" {
   app_name = var.app_name
   mig-id   = module.mig.mig-id
   check    = [module.mig.health-check]
-  ssl-domains = ["mrusn-wp.pp.ua."]
+  ssl-domains = ["wp-mruns.pp.ua"]
   depends_on = [module.mig]
+}
+
+module "dns" {
+  source     = "./modules/cloud-dns"
+  ip         = module.load-balancer.front-ip
+  dns-name   = var.dns-name
+  dns-type   = var.dns-type
+  depends_on = [module.load-balancer]
 }

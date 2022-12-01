@@ -13,15 +13,11 @@ resource "google_compute_backend_service" "backend" {
 }
 
 resource "google_compute_url_map" "default" {
-  name            = "${var.app_name}-url-map"
+  name            = "${var.app_name}-load-balancer"
   default_service = google_compute_backend_service.backend.id
 }
 
-resource "google_compute_target_https_proxy" "https-proxy" {
-  name             = "${var.app_name}-proxy"
-  url_map          = google_compute_url_map.default.id
-  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
-}
+
 
 resource "google_compute_managed_ssl_certificate" "default" {
   name = "${var.app_name}-ssl-certificate"
@@ -30,12 +26,19 @@ resource "google_compute_managed_ssl_certificate" "default" {
   }
 }
 
+resource "google_compute_target_https_proxy" "https-proxy" {
+  name             = "${var.app_name}-proxy"
+  url_map          = google_compute_url_map.default.id
+  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
+}
+
 resource "google_compute_global_forwarding_rule" "load-balancer-https" {
   name       = "https-role"
   ip_address = google_compute_global_address.front.address
   port_range = "443"
   target     = google_compute_target_https_proxy.https-proxy.id
 }
+
 
 resource "google_compute_target_http_proxy" "http-proxy" {
   name        = "${var.app_name}-target-http-proxy"
@@ -47,4 +50,13 @@ resource "google_compute_global_forwarding_rule" "http-role" {
   ip_address = google_compute_global_address.front.address
   target     = google_compute_target_http_proxy.http-proxy.id
   port_range = "80"
+}
+
+resource "google_compute_url_map" "http-redirect" {
+  name = "http-redirect"
+  default_url_redirect {
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    strip_query            = false
+    https_redirect         = true
+  }
 }

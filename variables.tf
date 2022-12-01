@@ -201,3 +201,10 @@ variable "autoscaler-max" {
 variable "ssl_domains" {
   type = string
 }
+variable "dns-name" {
+  type    = string
+}
+variable "dns-type" {
+  type    = string
+  default = "A"
+}
