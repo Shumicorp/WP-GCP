@@ -1,5 +1,5 @@
 resource "google_compute_instance_template" "wp-template" {
-  name           = "${var.app_name}-${var.app-name-sufix}-template"
+  name           = "${var.app_name}-${var.prefix}-template"
   tags           = var.tags
   machine_type   = var.mig_machine_type
   can_ip_forward = false
@@ -10,14 +10,14 @@ resource "google_compute_instance_template" "wp-template" {
   }
 
   disk {
-    source_image = "${var.app_name}-${var.app-name-sufix}-image"
+    source_image = "${var.app_name}-${var.prefix}-image"
     auto_delete  = true
     boot         = true
   }
 
   network_interface {
     network    = var.vpc
-    subnetwork = var.sub-net
+    subnetwork = var.sub_net
   }
 
   service_account {
@@ -31,9 +31,9 @@ resource "google_compute_instance_template" "wp-template" {
   metadata_startup_script = var.startup_script
 }
 resource "google_compute_region_instance_group_manager" "mig" {
-  name                      = "${var.app_name}-${var.app-name-sufix}-mig"
-  base_instance_name        = "${var.app_name}-${var.app-name-sufix}-groupe"
-  region                    = var.mig-region
+  name                      = "${var.app_name}-${var.prefix}-mig"
+  base_instance_name        = "${var.app_name}-${var.prefix}-groupe"
+  region                    = var.mig_region
   distribution_policy_zones = var.distribution_policy_zones
   version {
     instance_template = google_compute_instance_template.wp-template.id
@@ -50,13 +50,13 @@ resource "google_compute_region_instance_group_manager" "mig" {
   }
 }
 resource "google_compute_region_autoscaler" "autoscaler" {
-  name   = "${var.app_name}-${var.app-name-sufix}-autoscaler"
-  region = var.mig-region
+  name   = "${var.app_name}-${var.prefix}-autoscaler"
+  region = var.mig_region
 
   target = google_compute_region_instance_group_manager.mig.id
   autoscaling_policy {
-    max_replicas    = var.autoscaler-max
-    min_replicas    = var.autoscaler-min
+    max_replicas    = var.autoscaler_max
+    min_replicas    = var.autoscaler_min
     cooldown_period = 80
     cpu_utilization { target = 1 }
   }
@@ -64,7 +64,7 @@ resource "google_compute_region_autoscaler" "autoscaler" {
 
 
 resource "google_compute_health_check" "health-check" {
-  name                = "${var.app_name}-${var.app-name-sufix}-health-check"
+  name                = "${var.app_name}-${var.prefix}-health-check"
   check_interval_sec  = 10
   timeout_sec         = 5
   healthy_threshold   = 2

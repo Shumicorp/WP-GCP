@@ -1,19 +1,19 @@
 variable "name" {
   type = string
 }
-variable "sufix" {
+variable "prefix" {
   type = string
 }
-variable "subnet1-ip_cidr" {
+variable "subnet1_ip_cidr" {
   type = string
 }
-variable "subnet1-region" {
+variable "subnet1_region" {
   type = string
 }
-variable "subnet2-ip_cidr" {
+variable "subnet2_ip_cidr" {
   type = string
 }
-variable "subnet2-region" {
+variable "subnet2_region" {
   type = string
 }
 

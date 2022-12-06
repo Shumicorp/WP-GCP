@@ -1,5 +1,5 @@
 resource "google_compute_instance" "bastion" {
-  name         = "${var.name}-${var.app-name-sufix}-bastion"
+  name         = "${var.name}-${var.prefix}-bastion"
   machine_type = var.machine_type
   zone         = var.zone
   tags         = ["bastion"]

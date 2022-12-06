@@ -5,14 +5,14 @@ packer build \
  -var 'priv-subnet=${var.subnet}' \
  -var 'project=${var.project}'\
  -var 'zone=${var.zone}'\
- -var 'username=${var.ssh-username}' \
- -var 'image-name=${var.app-name}-${var.app-name-sufix}-image' \
- -var 'source-image=${var.source-image}' \
- -var 'bastion-ip=${var.bastion-ip}' \
- -var 'ssh-private-key-path=${var.ssh-private-key-path}' \
- -var 'machine-type=${var.packer-machine-type}' \
+ -var 'username=${var.ssh_username}' \
+ -var 'image-name=${var.app_name}-${var.prefix}-image' \
+ -var 'source-image=${var.source_image}' \
+ -var 'bastion-ip=${var.bastion_ip}' \
+ -var 'ssh-private-key-path=${var.ssh_private_key_path}' \
+ -var 'machine-type=${var.packer_machine_type}' \
  -var 'playbook=${var.playbook}' \
- -var 'ansible-extra-vars=${var.ansible-extra-vars}' \
+ -var 'ansible-extra-vars=${var.ansible_extra_vars}' \
  packer/packer.pkr.hcl
 sleep 5
 EOF

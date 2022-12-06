@@ -7,30 +7,30 @@ variable "project" {
 variable "zone" {
   type = string
 }
-variable "app-name" {
+variable "app_name" {
   type = string
 }
-variable "app-name-sufix" {
+variable "prefix" {
   type = string
 }
-variable "source-image" {
+variable "source_image" {
   type = string
 }
-variable "bastion-ip" {
+variable "bastion_ip" {
   type = string
 }
-variable "ssh-private-key-path" {
+variable "ssh_private_key_path" {
   type = string
 }
-variable "ssh-username" {
+variable "ssh_username" {
   type = string
 }
-variable "packer-machine-type" {
+variable "packer_machine_type" {
   type = string
 }
 variable "playbook" {
   type = string
 }
-variable "ansible-extra-vars" {
+variable "ansible_extra_vars" {
   type = string
 }

@@ -28,22 +28,22 @@ variable "secret_labels" {
   sensitive = true
 }
 
-variable "vpc-subnet1-ip_cidr" {
+variable "vpc_subnet1_ip_cidr" {
   type        = string
   default     = "10.0.10.0/24"
   description = "IP range"
 }
-variable "vpc-subnet1-region" {
+variable "vpc_subnet1_region" {
   type    = string
   default = "europe-west2"
 }
 
-variable "vpc-subnet2-ip_cidr" {
+variable "vpc_subnet2_ip_cidr" {
   type        = string
   default     = "10.0.20.0/24"
   description = "IP range"
 }
-variable "vpc-subnet2-region" {
+variable "vpc_subnet2_region" {
   type    = string
   default = "europe-west1"
 }
@@ -81,42 +81,42 @@ variable "roles" {
   description = "roles"
   default     = ["roles/iam.serviceAccountUser", "roles/compute.instanceAdmin.v1", "roles/iap.tunnelResourceAccessor"]
 }
-variable "app-name-sufix" {
+variable "app_name_prefix" {
   type        = string
-  description = "sufix for bucket"
+  description = "prefix"
   default     = "prod"
 }
-variable "bucket-lifecycle-age" {
+variable "bucket_lifecycle_age" {
   type    = number
   default = 365
 }
-variable "bucket-versioning" {
+variable "bucket_versioning" {
   type    = string
   default = "true"
 }
-variable "bucket-location" {
+variable "bucket_location" {
   type        = string
   description = "location for storage-bucket"
   default     = "EU"
 }
-variable "bucket-sa-role" {
+variable "bucket_sa_role" {
   type    = string
   default = "roles/storage.admin"
 }
 
-variable "db-service-name" {
+variable "db_service_name" {
   type    = string
   default = "wp-sql"
 }
-variable "db-region" {
+variable "db_region" {
   type    = string
   default = "europe-west1"
 }
-variable "db-zone1" {
+variable "db_zone1" {
   type    = string
   default = "b"
 }
-variable "db-zone2" {
+variable "db_zone2" {
   type    = string
   default = "c"
 }
@@ -128,17 +128,17 @@ variable "deletion_protection" {
   type    = string
   default = "false"
 }
-variable "db-instance-type" {
+variable "db_instance_type" {
   type    = string
   default = "db-f1-micro"
+  # db-custom-2-4096
 }
-variable "db-user-name" {
+variable "db_user_name" {
   type        = string
   description = "user name"
   default     = "wordpress"
 }
-
-variable "db-database-name" {
+variable "db_database_name" {
   type    = string
   default = "wordpress"
 }
@@ -151,16 +151,16 @@ variable "source_image_packer" {
   type    = string
   default = "ubuntu-2004-focal-v20220419"
 }
-variable "ssh-private-key-path" {
+variable "ssh_private_key_path" {
   type = string
 }
-variable "ssh-username-packer" {
+variable "ssh_username_packer" {
   type = string
 }
-variable "packer-machine-type" {
+variable "packer_machine_type" {
   type = string
 }
-variable "wp-playbook" {
+variable "wp_playbook" {
   type = string
 }
 variable "mig_tags" {
@@ -188,12 +188,12 @@ variable "auto_healing_delay" {
   default     = 300
   description = "initial_delay_sec for auto_healing_policies in mig"
 }
-variable "autoscaler-min" {
+variable "autoscaler_min" {
   type        = number
-  default     = 2
+  default     = 1
   description = "number of minimum replicas for autoscaler"
 }
-variable "autoscaler-max" {
+variable "autoscaler_max" {
   type        = number
   default     = 4
   description = "number of maximum replicas for autoscaler"
@@ -201,10 +201,10 @@ variable "autoscaler-max" {
 variable "ssl_domains" {
   type = string
 }
-variable "dns-name" {
-  type    = string
+variable "dns_name" {
+  type = string
 }
-variable "dns-type" {
+variable "dns_type" {
   type    = string
   default = "A"
 }

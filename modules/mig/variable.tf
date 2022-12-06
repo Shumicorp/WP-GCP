@@ -1,7 +1,7 @@
 variable "app_name" {
   type = string
 }
-variable "app-name-sufix" {
+variable "prefix" {
   type = string
 }
 variable "tags" {
@@ -14,7 +14,7 @@ variable "vpc" {
   type        = string
   description = "id vpc-network"
 }
-variable "sub-net" {
+variable "sub_net" {
   type        = string
   description = "id private-subnetwork"
 }
@@ -24,7 +24,7 @@ variable "sa" {
 }
 variable "startup_script" {
 }
-variable "mig-region" {
+variable "mig_region" {
   type = string
 }
 variable "distribution_policy_zones" {
@@ -40,10 +40,10 @@ variable "mig_port" {
 variable "auto_healing_delay" {
   type = number
 }
-variable "autoscaler-min" {
+variable "autoscaler_min" {
   type = number
 }
-variable "autoscaler-max" {
+variable "autoscaler_max" {
   type = number
 }
 

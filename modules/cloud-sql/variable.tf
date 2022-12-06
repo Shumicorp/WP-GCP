@@ -1,12 +1,11 @@
-variable "vpc-net" {
-
+variable "vpc_net" {
   description = "vpc-network"
 }
-variable "db-service-name" {
+variable "db_service_name" {
   type        = string
   description = "name database"
 }
-variable "app-name-sufix" {
+variable "prefix" {
   type = string
 }
 variable "region" {
@@ -24,16 +23,16 @@ variable "database_version" {
 variable "deletion_protection" {
   type = string
 }
-variable "db-instance-type" {
+variable "db_instance_type" {
   type = string
 }
-variable "db-user-name" {
+variable "db_user_name" {
   type = string
 }
-variable "db-user-pass" {
+variable "db_user_pass" {
   type      = string
   sensitive = true
 }
-variable "db-database-name" {
+variable "db_database_name" {
   type = string
 }

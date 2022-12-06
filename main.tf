@@ -3,16 +3,16 @@ module "vpc_network" {
   # VPC with 2 subnetworks, router, nat
   source          = "./modules/vpc-network"
   name            = var.app_name
-  sufix           = var.app-name-sufix
-  subnet1-ip_cidr = var.vpc-subnet1-ip_cidr
-  subnet1-region  = var.vpc-subnet1-region
-  subnet2-ip_cidr = var.vpc-subnet2-ip_cidr
-  subnet2-region  = var.vpc-subnet2-region
+  prefix          = var.app_name_prefix
+  subnet1_ip_cidr = var.vpc_subnet1_ip_cidr
+  subnet1_region  = var.vpc_subnet1_region
+  subnet2_ip_cidr = var.vpc_subnet2_ip_cidr
+  subnet2_region  = var.vpc_subnet2_region
 }
 module "bastion" {
   source         = "./modules/bastion"
-  name           = var.app_name
-  app-name-sufix = var.app-name-sufix
+  name           = var.app_name 
+  prefix         = var.app_name_prefix
   network        = module.vpc_network.vpc
   subnet         = module.vpc_network.private_subnet
   zone           = var.zone
@@ -24,7 +24,7 @@ module "firewall" {
   firewall   = var.firewall
   depends_on = [module.vpc_network]
 }
-module "service-account" {
+module "service_account" {
   source     = "./modules/service-account"
   project    = var.project
   account_id = var.account_id
@@ -32,41 +32,41 @@ module "service-account" {
 }
 module "storage" {
   source               = "./modules/storage"
-  bucket_name          = var.app_name
-  bucket-name-sufix    = var.app-name-sufix
-  bucket-location      = var.bucket-location
-  bucket-lifecycle-age = var.bucket-lifecycle-age
-  bucket-versioning    = var.bucket-versioning
-  sa                   = module.service-account.email
-  bucket-sa-role       = var.bucket-sa-role
-  depends_on           = [module.service-account]
+  bucket_name          = var.app_name  #will be app_name-prefix-bucket
+  prefix               = var.app_name_prefix
+  bucket_location      = var.bucket_location
+  bucket_lifecycle_age = var.bucket_lifecycle_age
+  bucket_versioning    = var.bucket_versioning
+  sa                   = module.service_account.email
+  bucket_sa_role       = var.bucket_sa_role
+  depends_on           = [module.service_account]
 }
 
 #data "google_secret_manager_secret_version" "dbpass" {
 #  secret = "dbpass"
 #}
-module "secret-manager" {
+module "secret_manager" {
   source    = "./modules/secrets"
   length    = var.secret_lenght
   secret_id = var.secret_id
   labels    = var.secret_labels
 }
 
-module "db-mysql" {
+module "db_mysql" {
   source              = "./modules/cloud-sql"
-  vpc-net             = module.vpc_network.vpc
-  db-service-name     = var.app_name
-  app-name-sufix      = var.app-name-sufix
-  region              = var.db-region
+  vpc_net             = module.vpc_network.vpc
+  db_service_name     = var.app_name
+  prefix              = var.app_name_prefix
+  region              = var.db_region
   database_version    = var.database_version
   deletion_protection = var.deletion_protection
-  db-instance-type    = var.db-instance-type
-  zone1               = var.db-zone1
-  zone2               = var.db-zone2
-  db-user-name        = var.db-user-name
-  db-database-name    = var.db-database-name
-  #db-user-pass        = data.google_secret_manager_secret_version.dbpass.secret_data
-  db-user-pass = module.secret-manager.secret
+  db_instance_type    = var.db_instance_type
+  zone1               = var.db_zone1
+  zone2               = var.db_zone2
+  db_user_name        = var.db_user_name
+  db_database_name    = var.db_database_name
+  #db_user_pass        = data.google_secret_manager_secret_version.dbpass.secret_data
+  db_user_pass = module.secret_manager.secret
   depends_on   = [module.vpc_network]
 }
 
@@ -75,51 +75,58 @@ module "packer" {
   subnet               = module.vpc_network.private_subnet.id
   project              = var.project
   zone                 = var.zone
-  app-name-sufix       = var.app-name-sufix
-  app-name             = var.app_name
-  source-image         = var.source_image_packer
-  bastion-ip           = module.bastion.ip
-  ssh-private-key-path = var.ssh-private-key-path
-  ssh-username         = var.ssh-username-packer
-  packer-machine-type  = var.packer-machine-type
-  playbook             = var.wp-playbook
-  ansible-extra-vars   = "bucket=${module.storage.bucket} db_name=${var.db-database-name} db_ip=${module.db-mysql.db-ip} password=${module.secret-manager.secret} user=${var.db-user-name}"
-  depends_on           = [module.vpc_network, module.storage.bucket, module.secret-manager, module.db-mysql.db_ip]
+  prefix               = var.app_name_prefix
+  app_name             = var.app_name
+  source_image         = var.source_image_packer
+  bastion_ip           = module.bastion.ip
+  ssh_private_key_path = var.ssh_private_key_path
+  ssh_username         = var.ssh_username_packer
+  packer_machine_type  = var.packer_machine_type
+  playbook             = var.wp_playbook
+  ansible_extra_vars   = "bucket=${module.storage.bucket} db_name=${var.db_database_name} db_ip=${module.db_mysql.db-ip} password=${module.secret_manager.secret} user=${var.db_user_name} dns_name=${var.dns_name}"
+  depends_on           = [module.vpc_network, module.storage.bucket, module.secret_manager, module.db_mysql.db_ip]
 }
 
 module "mig" {
   source                    = "./modules/mig"
   app_name                  = var.app_name
-  app-name-sufix            = var.app-name-sufix
+  prefix                    = var.app_name_prefix
   tags                      = var.mig_tags
   mig_machine_type          = var.mig_machine_type
   vpc                       = module.vpc_network.vpc.id
-  sub-net                   = module.vpc_network.private_subnet.id
-  sa                        = module.service-account.email
+  sub_net                   = module.vpc_network.private_subnet.id
+  sa                        = module.service_account.email
   startup_script            = templatefile("./templatefile/wp-mig.tftpl", { bucket = "${module.storage.bucket}" })
-  mig-region                = var.region
+  mig_region                = var.region
   distribution_policy_zones = var.mig_distribution_policy_zones
   mig_port_name             = var.mig_port_name
   mig_port                  = var.mig_port
   auto_healing_delay        = var.auto_healing_delay
-  autoscaler-max            = var.autoscaler-max
-  autoscaler-min            = var.autoscaler-min
-  depends_on                = [module.packer, module.vpc_network, module.service-account]
+  autoscaler_max            = var.autoscaler_max
+  autoscaler_min            = var.autoscaler_min
+  depends_on                = [module.packer, module.vpc_network, module.service_account]
 }
 
 module "load-balancer" {
-  source   = "./modules/load-balancer"
-  app_name = var.app_name
-  mig-id   = module.mig.mig-id
-  check    = [module.mig.health-check]
-  ssl-domains = ["wp-mruns.pp.ua"]
-  depends_on = [module.mig]
+  source     = "./modules/load-balancer"
+  app_name   = var.app_name
+  mig_id     = module.mig.mig_id
+  check      = [module.mig.health_check]
+  ssl_id     = [module.static.ssl_id]
+  front_ip   = module.static.front_ip
+  depends_on = [module.mig.mig_id, module.static]
+}
+
+module "static" {
+  source      = "./modules/static"
+  app_name    = var.app_name
+  ssl_domains = ["${var.dns_name}."]
 }
 
 module "dns" {
   source     = "./modules/cloud-dns"
-  ip         = module.load-balancer.front-ip
-  dns-name   = var.dns-name
-  dns-type   = var.dns-type
-  depends_on = [module.load-balancer]
+  ip         = [module.static.front_ip]
+  dns_name   = var.dns_name
+  dns_type   = var.dns_type
+  depends_on = [module.static.front_ip]
 }

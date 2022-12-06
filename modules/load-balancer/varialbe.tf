@@ -1,7 +1,7 @@
 variable "app_name" {
   type = string
 }
-variable "mig-id" {
+variable "mig_id" {
   type        = string
   description = "id instance groupe"
 }
@@ -10,7 +10,9 @@ variable "check" {
   description = "health check"
 }
 
-variable "ssl-domains" {
-  type    = list(any)
-  default = []
+variable "front_ip" {
+   type = string
+}
+variable "ssl_id" {
+  type = list(string)
 }

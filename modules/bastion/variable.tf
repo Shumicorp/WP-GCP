@@ -1,7 +1,7 @@
 variable "name" {
   type = string
 }
-variable "app-name-sufix" {
+variable "prefix" {
   type = string
 }
 variable "network" {
