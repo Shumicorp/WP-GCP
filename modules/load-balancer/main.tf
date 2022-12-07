@@ -11,6 +11,9 @@ resource "google_compute_backend_service" "backend" {
   }
   name          = "${var.app_name}-backend"
   health_checks = var.check
+  cdn_policy {
+    signed_url_cache_max_age_sec = 900
+  }
 }
 
 resource "google_compute_target_https_proxy" "https-proxy" {
