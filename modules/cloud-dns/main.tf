@@ -8,10 +8,19 @@ resource "google_dns_managed_zone" "parent-zone" {
   force_destroy = true
 }
 
+
 resource "google_dns_record_set" "resource-recordset" {
   managed_zone = google_dns_managed_zone.parent-zone.name
   name         = "${var.dns_name}."
   type         = var.dns_type
   rrdatas      = var.ip
-  ttl          = 5
+  ttl          = 300
+}
+
+resource "google_dns_record_set" "dns-cname-record" {
+  managed_zone = google_dns_managed_zone.parent-zone.name
+  name         = "www.${var.dns_name}."
+  type         = "CNAME"
+  rrdatas      = ["${var.dns_name}."]
+  ttl          = 300
 }

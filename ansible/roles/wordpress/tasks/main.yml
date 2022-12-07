@@ -61,6 +61,14 @@
     mode: '0755'
   become: true
 
+- name: htaccess file
+  ansible.builtin.copy:
+    src: ../files/htaccess
+    dest: ./wordpress/.htaccess
+    mode: "0755"
+    owner: mrusn
+  become: true
+
 - name: upload wordpress to bucket
   ansible.builtin.shell: |
     sudo chown www-data:www-data wordpress -R
@@ -73,3 +81,13 @@
    curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
    sudo bash add-google-cloud-ops-agent-repo.sh --also-install
   become: true
+
+- name: default.conf file
+  ansible.builtin.copy:
+    src: ../files/000-default.conf
+    dest: /etc/apache2/sites-available/000-default.conf
+    mode: "0755"
+    owner: mrusn
+  become: true
+  notify:
+  - restart apache

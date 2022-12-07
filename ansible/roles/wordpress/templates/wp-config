@@ -6,7 +6,6 @@ define( 'DB_PASSWORD', '{{password}}' );
 define( 'DB_HOST', '{{db_ip}}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
-define( 'WP_MEMORY_LIMIT', '128M' );
 
 $table_prefix = 'wp_';
 
@@ -21,3 +20,4 @@ require_once ABSPATH . 'wp-settings.php';
 
 define('WP_HOME', 'http://{{dns_name}}');
 define('WP_SITEURL', 'http://{{dns_name}}');
+	
