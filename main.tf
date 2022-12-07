@@ -1,4 +1,4 @@
-/*
+
 module "vpc_network" {
   # VPC with 2 subnetworks, router, nat
   source          = "./modules/vpc-network"
@@ -130,4 +130,3 @@ module "dns" {
   dns_type   = var.dns_type
   depends_on = [module.static.front_ip]
 }
-*/
