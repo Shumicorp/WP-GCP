@@ -8,3 +8,9 @@ variable "dns_name" {
 variable "dns_type" {
   type = string
 }
+variable "domain" {
+  type = string
+}
+variable "new_zone" {
+  type = string
+}

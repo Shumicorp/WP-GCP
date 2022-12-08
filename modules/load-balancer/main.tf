@@ -31,8 +31,7 @@ resource "google_compute_global_forwarding_rule" "https-forward" {
 
 resource "google_compute_target_http_proxy" "http-proxy" {
   name    = "target-http-proxy"
-  url_map = google_compute_url_map.default.id
-  #url_map = google_compute_url_map.http-redirect.id
+  url_map = google_compute_url_map.http-redirect.id
 }
 
 
@@ -43,7 +42,7 @@ resource "google_compute_global_forwarding_rule" "http-forward" {
   port_range = "80"
 }
 
-/*
+
 resource "google_compute_url_map" "http-redirect" {
   name = "http-redirect"
   default_url_redirect {
@@ -52,4 +51,3 @@ resource "google_compute_url_map" "http-redirect" {
     https_redirect         = true
   }
 }
-*/

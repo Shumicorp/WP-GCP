@@ -18,3 +18,15 @@ sleep 5
 EOF
   }
 }
+
+resource "null_resource" "wp-packer-destroy" {
+  triggers = {
+    image = "${var.app_name}-${var.prefix}-image"
+  }
+  provisioner "local-exec" {
+    when       = destroy
+    command    = <<EOF
+gcloud compute images delete ${self.triggers.image} -q \
+EOF
+  }
+}

@@ -57,17 +57,21 @@
   ansible.builtin.template:
     src: ../templates/wp-config
     dest: ./wordpress/wp-config.php
-    owner: mrusn
     mode: '0755'
   become: true
 
 - name: htaccess file
   ansible.builtin.copy:
     src: ../files/htaccess
-    dest: ./wordpress/.htaccess
+    dest: ./wordpress/htaccess
     mode: "0755"
-    owner: mrusn
   become: true
+
+- name: rename htaccess
+  ansible.builtin.shell: |
+    sudo mv wordpress/htaccess wordpress/.htaccess
+  become: true
+
 
 - name: upload wordpress to bucket
   ansible.builtin.shell: |
@@ -87,7 +91,6 @@
     src: ../files/000-default.conf
     dest: /etc/apache2/sites-available/000-default.conf
     mode: "0755"
-    owner: mrusn
   become: true
   notify:
   - restart apache

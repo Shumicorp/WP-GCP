@@ -22,3 +22,4 @@ resource "google_storage_bucket_iam_member" "member" {
   member     = "serviceAccount:${var.sa}"
   depends_on = [google_storage_bucket.wp-bucket]
 }
+

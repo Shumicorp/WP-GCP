@@ -1,6 +1,5 @@
 
 module "vpc_network" {
-  # VPC with 2 subnetworks, router, nat
   source          = "./modules/vpc-network"
   name            = var.app_name
   prefix          = var.app_name_prefix
@@ -85,7 +84,7 @@ module "packer" {
   playbook             = var.wp_playbook
   ansible_extra_vars   = "bucket=${module.storage.bucket} db_name=${var.db_database_name} db_ip=${module.db_mysql.db-ip} password=${module.secret_manager.secret} user=${var.db_user_name} dns_name=${var.dns_name}"
   depends_on           = [module.vpc_network, module.storage.bucket, module.secret_manager, module.db_mysql.db_ip]
-}
+}  
 
 module "mig" {
   source                    = "./modules/mig"
@@ -120,13 +119,15 @@ module "load-balancer" {
 module "static" {
   source      = "./modules/static"
   app_name    = var.app_name
-  ssl_domains = ["${var.dns_name}."]
+  ssl_domains = ["${var.domain}."]
 }
 
 module "dns" {
   source     = "./modules/cloud-dns"
   ip         = [module.static.front_ip]
+  new_zone   = var.new_zone
   dns_name   = var.dns_name
+  domain     = var.domain 
   dns_type   = var.dns_type
   depends_on = [module.static.front_ip]
 }

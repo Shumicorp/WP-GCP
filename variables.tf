@@ -15,7 +15,7 @@ variable "zone" {
 }
 variable "secret_lenght" {
   type    = number
-  default = 8
+  default = 10
 }
 
 variable "secret_id" {
@@ -153,15 +153,19 @@ variable "source_image_packer" {
 }
 variable "ssh_private_key_path" {
   type = string
+  default = "~/.ssh/id_rsa"
 }
 variable "ssh_username_packer" {
   type = string
+  default = "$USER"
 }
 variable "packer_machine_type" {
   type = string
+  default = "e2-medium"
 }
 variable "wp_playbook" {
   type = string
+  default = "ansible/wp-playbook.yml"
 }
 variable "mig_tags" {
   type    = list(string)
@@ -169,7 +173,7 @@ variable "mig_tags" {
 }
 variable "mig_machine_type" {
   type    = string
-  default = "f1-micro"
+  default = "e2-medium"
 }
 variable "mig_distribution_policy_zones" {
   type    = list(any)
@@ -198,11 +202,20 @@ variable "autoscaler_max" {
   default     = 4
   description = "number of maximum replicas for autoscaler"
 }
-variable "ssl_domains" {
+variable "new_zone" {
   type = string
+  default = "false"
+  description = "if you don't have dns change to true"
 }
 variable "dns_name" {
   type = string
+  default = "my-zone"
+  description = "Entert your zone name"
+}
+variable "domain" {
+  type = string
+  default = "exzample.com"
+  description = "Entert your domain"
 }
 variable "dns_type" {
   type    = string
