@@ -1,4 +1,3 @@
-
 module "vpc_network" {
   source          = "./modules/vpc-network"
   name            = var.app_name
@@ -23,12 +22,14 @@ module "firewall" {
   firewall   = var.firewall
   depends_on = [module.vpc_network]
 }
+
 module "service_account" {
   source     = "./modules/service-account"
   project    = var.project
   account_id = var.account_id
   roles      = var.roles
 }
+
 module "storage" {
   source               = "./modules/storage"
   bucket_name          = var.app_name  #will be app_name-prefix-bucket

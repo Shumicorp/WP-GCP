@@ -70,4 +70,4 @@ gsutil versioning set on gs://${TERRAFORM_BUCKET}
 export TF_VAR_bucket=$TERRAFORM_BUCKET
 
 terraform init -backend-config=bucket=$TF_VAR_bucket
-terraform plan
+terraform apply --auto-approve
